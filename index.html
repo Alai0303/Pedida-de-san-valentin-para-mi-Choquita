@@ -18,9 +18,62 @@
             overflow: hidden;
         }
 
+         /* Pantalla de inicio */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #d02e2e;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: 0.5s;
+        }
+
+        #overlay button {
+            background: white;
+            color: #d02e2e;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Corazones flotantes */
+        .heart {
+            position: absolute;
+            color: #ffb6c1;
+            font-size: 20px;
+            user-select: none;
+            animation: move linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes move {
+            from { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
         h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        h2 {
             color: #d02e2e;
             font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #d02e2e;
+            font-size: 1.5rem;
             margin-bottom: 20px;
         }
 
@@ -53,6 +106,8 @@
             border-radius: 10px;
             cursor: pointer;
             transition: 0.3s;
+             /* Lo movemos a la izquierda del centro */
+            transform: translateX(-70px); 
         }
 
         #no {
@@ -65,6 +120,8 @@
             position: absolute;
             cursor: pointer;
             transition: 0.1s;
+            /* Posición inicial a la derecha del centro */
+            left: 55%; 
         }
 
         .success-msg {
@@ -83,23 +140,56 @@
 </head>
 <body>
 
+     <div id="overlay">
+        <h1>Tengo algo que decirte...</h1>
+        <button onclick="empezar()">Haz clic aquí ❤️</button>
+    </div>
+
+    <audio id="musica" loop>
+        <source src="https://image2url.com/r2/default/audio/1770970372314-f25445de-8700-4525-a858-cce6d9513760.mp3">
+        </audio>
+
     <div id="main-content">
-        <h1 id="pregunta">¿Quieres pasar este 14 de febrero (y el resto de mi vida) conmigo? ❤️</h1>
-        <img src=https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYW5vY3NmOXgwZ3RxenI3MHkwZmkxYmQ2aWs0bXB4ZjZmbTVoeDFxciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/I8UbGCucAOdXxwT2aw/giphy.gif>
+        <h2 id="pregunta">¿Quieres pasar este 14 de febrero (y el resto de tu vida) conmigo? ❤️</h2>
+        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXJmcWF0cG15OTA3eTNobG1nNHJsdWxmNWJyeHZsenhxdDl1eGl2MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/y93x7gLXTO5dnSWCEI/giphy.gif">
         
         <div class="buttons">
             <button id="si" onclick="aceptar()">¡SÍ!</button>
-            <button id="no" onmouseover="moverBoton()" onclick="moverBoton()">No</button>
+            <button id="no" onmouseover="moverBoton()" onclick="moverBoton()" ontouchstart="moverBoton()">No</button>
         </div>
     </div>
 
     <div id="success" class="success-msg">
-        <h1>¡SABÍA QUE DIRÍAS QUE SÍ! 😍</h1>
-        <p>Te amo mucho Choquita.</p>
-        <img src=https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2kwZHRpdzA3dGoycWh3aDJtdnZkcTNiZGJrNTR0MXdob2ZveHkyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4RRsAtRZD1IIaCECNU/giphy.gif>
+        <h2>¡SABÍA QUE DIRÍAS QUE SÍ! 😍</h2>
+        <h3>Te amo Choquita. Espero te haya gustado.</h3>
+        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTQydjlxYms2MW05Yjg1aDZ1bW0zeWx3NzV5YTBvNnZoc2s0eG5hMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif">
     </div>
 
     <script>
+
+         // Función para la música y corazones
+        function empezar() {
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+            }, 500);
+            
+            const audio = document.getElementById('musica');
+            audio.play();
+            
+            setInterval(crearCorazon, 300);
+        }
+
+        function crearCorazon() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
         let tamanoSi = 1.2;
 
         function moverBoton() {
@@ -121,4 +211,3 @@
         }
     </script>
 </body>
-</html>
